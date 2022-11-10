@@ -17,8 +17,9 @@ debug/main.o:src/main.c
 	@arm-none-eabi-gcc -Wall -O2 -mcpu=cortex-m4 -mthumb -nostartfiles -ggdb -c $^ -o $@
 
 clean:
-	rm -r *.o *.elf *.list *.bin
+	rm -r debug/*.o debug/*.elf
+# debug/*.list debug/*.bin
 
 load:
-	qemu-system-arm -cpu cortex-m4 -machine lm3s6965evb -nographic -semihosting-config enable=on,target=native -gdb tcp::3333 -S -kernel debug/main.elf
+	qemu-system-arm -cpu cortex-m4 -machine lm3s6965evb -nographic -gdb tcp::3333 -S -kernel debug/main.elf
 #qemu-system-arm -cpu cortex-m4 -machine lm3s6965evb -nographic -semihosting-config enable=on,target=native -gdb tcp::3333 -kernel main
