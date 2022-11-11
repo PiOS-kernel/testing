@@ -1,4 +1,4 @@
-# simulation-debugging
+# Simulation-debugging
 Default project for debug and simulation using gdb and qemu
 
 ### How to simulate and debug
