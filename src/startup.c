@@ -1,5 +1,5 @@
-
-#include<stdint.h>
+#include "../includes/_common.h"
+#include <stdint.h>
 
 #define SRAM_START  0x20000000U
 #define SRAM_SIZE   (64U * 1024U) //128KB
@@ -18,17 +18,21 @@ extern uint32_t _ebss;
 //prototype of main
 
 int main(void);
-void hang(){
-    __asm__("b .\n\t");
-};
 
+static void _defaultHandler(void);
 
-void ResetISR(void);
-static void NmiSR(void);
-static void FaultISR(void);
-static void IntDefaultHandler(void);
-static void SysTickISR(void);
-extern int main(void);
+void ResetISR();
+__attribute__((weak, alias("_defaultHandler"))) void NmiISR();
+__attribute__((weak, alias("_defaultHandler"))) void HardFaultISR();
+__attribute__((weak, alias("_defaultHandler"))) void MemManageISR();
+__attribute__((weak, alias("_defaultHandler"))) void BusFaultISR();
+__attribute__((weak, alias("_defaultHandler"))) void UsageFaultIsr();
+void SVCallISR();
+__attribute__((weak, alias("_defaultHandler"))) void DebugMonitorISR();
+__attribute__((weak, alias("_defaultHandler"))) void PendsvISR();
+void SysTickISR();
+__attribute__((weak, alias("_defaultHandler"))) void IRQGeneralISR();
+
 
 // ISR VECTOR
 __attribute__ ((section(".isr_vector")))
@@ -37,40 +41,31 @@ void (* const g_pfnVectors[])(void) =
     (void (*)(void))((uint32_t)STACK_START),
                                             // The initial stack pointer
     ResetISR,                               // The reset handler
-    NmiSR,                                  // The NMI handler
-    FaultISR,                               // The hard fault handler
-    IntDefaultHandler,                      // The MPU fault handler
-    IntDefaultHandler,                      // The bus fault handler
-    IntDefaultHandler,                      // The usage fault handler
+    NmiISR,                                 // The NMI handler
+    HardFaultISR,                           // The hard fault handler
+    MemManageISR,                           // The MPU fault handler
+    BusFaultISR,                            // The bus fault handler
+    UsageFaultIsr,                          // The usage fault handler
     0,                                      // Reserved
     0,                                      // Reserved
     0,                                      // Reserved
     0,                                      // Reserved
-    IntDefaultHandler,						// SVCall handler
-    IntDefaultHandler,                      // Debug monitor handler
+    SVCallISR,						        // SVCall handler
+    DebugMonitorISR,                        // Debug monitor handler
     0,                                      // Reserved
-    IntDefaultHandler,                      // The PendSV handler
+    PendsvISR,                              // The PendSV handler
     SysTickISR,                             // The SysTick handler
-    IntDefaultHandler,                      // IRQ general
+    IRQGeneralISR,                          // IRQ general
 };
 
 
-void NmiSR(void)
+
+void _defaultHandler()
 {
 	while(1);
 }
 
-void FaultISR(void)
-{
-	while(1);
-}
-
-void IntDefaultHandler(void)
-{
-	while(1);
-}
-
-void ResetISR(void)
+void ResetISR()
 {
 	//copy .data section to SRAM
 	uint32_t size = (uint32_t)&_edata - (uint32_t)&_sdata;
@@ -90,19 +85,22 @@ void ResetISR(void)
 	{
 		*pDst++ = 0;
 	}
+
+    //setup SysTick
+    SysTick_init();
+    SysTick_setLOAD(12000000); // +- 1ms
+    SysTick_enable();
 	
 	main();
 
-    //pending exit
-	hang();
+    while(1);
 }
 
-void SysTickISR(void){
-
+void SVCallISR(){
+    while(1);
 }
 
-
-
-
-
+void SysTickISR(){
+    serial_print("Hello World\n");
+}
 

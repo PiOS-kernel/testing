@@ -41,5 +41,7 @@ SECTIONS
         end = .;
         __end__ = .;
     }> SRAM
+
+    __entryKernel = __end__;
   
 }
