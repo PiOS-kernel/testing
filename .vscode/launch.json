@@ -9,7 +9,7 @@
             "type": "gdb",
             "request": "attach",
             "cwd": "${workspaceRoot}",
-            "executable": "./debug/main.elf",
+            "executable": "./debug/final.elf",
             "target": ":3333",
             "remote": true,
             "gdbpath" : "/usr/bin/gdb-multiarch",
