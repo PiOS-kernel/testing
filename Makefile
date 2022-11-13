@@ -1,5 +1,6 @@
 LDFILE=src/linker.ld
-FILES=$(subst .c,.o,$(wildcard src/*.c))
+SRCFILES=$(subst .c,.o,$(wildcard src/*.c))
+DEBFILES=$(subst src,debug,$(SRCFILES))
 
 all:debug/final.elf
 	@arm-none-eabi-objdump -D debug/final.elf > debug/final.list
@@ -9,23 +10,26 @@ all:debug/final.elf
 # arm-none-eabi-objcopy -O binary notmain.elf notmain.bin
 
 
-debug/final.elf:debug/flash.o debug/main.o debug/startup.o debug/systick.o debug/tools.o
+debug/final.elf:debug/_init.o $(DEBFILES)
 	@arm-none-eabi-ld -nostdlib -T $(LDFILE) $^ -Lsrc -lgetchar -o $@
 
-debug/flash.o:src/flash.s
+debug/_init.o:src/_init.s
 	@arm-none-eabi-as --warn --fatal-warnings -mcpu=cortex-m4 -ggdb $^ -o $@
 
-debug/main.o:src/main.c
+debug/%.o: src/%.c
 	@arm-none-eabi-gcc -Wall -O0 -mcpu=cortex-m4 -mthumb -nostartfiles -ggdb -c $^ -o $@
 
-debug/startup.o:src/startup.c
-	@arm-none-eabi-gcc -Wall -O0 -mcpu=cortex-m4 -mthumb -nostartfiles -ggdb -c $^ -o $@
+# debug/main.o:src/main.c
+# 	@arm-none-eabi-gcc -Wall -O0 -mcpu=cortex-m4 -mthumb -nostartfiles -ggdb -c $^ -o $@
 
-debug/tools.o:src/tools.c
-	@arm-none-eabi-gcc -Wall -O0 -mcpu=cortex-m4 -mthumb -nostartfiles -ggdb -c $^ -o $@
+# debug/startup.o:src/startup.c
+# 	@arm-none-eabi-gcc -Wall -O0 -mcpu=cortex-m4 -mthumb -nostartfiles -ggdb -c $^ -o $@
 
-debug/systick.o:src/systick.c
-	@arm-none-eabi-gcc -Wall -O0 -mcpu=cortex-m4 -mthumb -nostartfiles -ggdb -c $^ -o $@
+# debug/tools.o:src/tools.c
+# 	@arm-none-eabi-gcc -Wall -O0 -mcpu=cortex-m4 -mthumb -nostartfiles -ggdb -c $^ -o $@
+
+# debug/systick.o:src/systick.c
+# 	@arm-none-eabi-gcc -Wall -O0 -mcpu=cortex-m4 -mthumb -nostartfiles -ggdb -c $^ -o $@
 
 clean:
 	rm -r debug/*.o debug/*.elf debug/*.list

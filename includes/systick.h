@@ -67,9 +67,25 @@ typedef struct SysTick {
 
 }SysTick;
 
+/**
+ * @brief SysTick module initialization
+ *      set CTRL to default values
+ *      clean all other register
+ *      set CALIB according to specs:
+ *          set 31st and 30th bit to ZERO (CLEAN),
+ *          set [23th-0th] bits to ONE (SET) -> VALUE IS NOT CORRECT, NEED TO INCREASE OVERALL CLOCK
+ */
 void SysTick_init();
 void SysTick_enable();
 void SysTick_disable();
+
+/**
+ * @brief to update LOAD register value
+ * [23-0] bits are accessible; other are reserved
+ * 
+ * @param x number of ticks before triggering interrupt
+ *      qemu -> 12MHz clock
+ */
 void SysTick_setLOAD(int x);
 
 #endif
