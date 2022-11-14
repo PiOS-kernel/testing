@@ -87,16 +87,18 @@ void ResetISR()
 	}
 
     //setup SysTick
-    SysTick_init();
-    SysTick_setLOAD(12000000); // +- 1ms
-    SysTick_enable();
+    // SysTick_init();
+    // SysTick_setLOAD(12000000); // +- 1ms
+    // SysTick_enable();
 	
+    // __asm__("MRS R0, CONTROL\n\t");
+    // __asm__("MOV R0, #0x00000001\n\t");
+    // __asm__("MSR CONTROL, R0\n\t");
+    // __asm__("MRS R0, CONTROL\n\t");
+    __asm__("MOV R0, #01");
+    __asm__("MSR CONTROL, R0");
 	main();
 
-    while(1);
-}
-
-void SVCallISR(){
     while(1);
 }
 

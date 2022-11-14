@@ -31,10 +31,10 @@ static const size_t BASE = 0xe000e010;
 
 typedef struct SysTick {
 
-    uint32_t CTRL;
-    uint32_t RELOAD;
-    uint32_t CURRENT;
-    uint32_t CALIB;
+    uint32_t CTRL __attribute__((aligned(4)));
+    uint32_t RELOAD __attribute__((aligned(4)));
+    uint32_t CURRENT __attribute__((aligned(4)));
+    uint32_t CALIB __attribute__((aligned(4)));
 
 
 

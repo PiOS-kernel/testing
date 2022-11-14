@@ -4,21 +4,15 @@
 //main - va avanti all'infinito
 int main ( void )
 {    
+    //serial_print("before\n");
+    //__asm__("SVC #01\n\t");
+    serial_print("after\n");
+
     while(1);
     return(0);
 }
 
-// void serial_print(char* string_to_print){
-//     int i = 0;
-//     uint8_t c;
-//     i = 0;
-//     c = string_to_print[i];
-//     while(c != '\0'){
-//         PUT32(UART0BASE, c);
-//         ++i;
-//         c = string_to_print[i];
-//     }
-//     PUT32(UART0BASE, '\n');
-//     PUT32(UART0BASE, '\r');
-
-// }
+void HardFaultISR()
+{
+	while(1);
+}

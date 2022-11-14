@@ -1,16 +1,20 @@
 LDFILE=src/linker.ld
-SRCFILES=$(subst .c,.o,$(wildcard src/*.c))
-DEBFILES=$(subst src,debug,$(SRCFILES))
+PIOS_KERNEL=getchar
+PIOS_PATH=-Lsrc -l$(PIOS_KERNEL)
+SRCFILES_C=$(subst .c,.o,$(wildcard src/*.c))
+DEBFILES_C=$(subst src,debug,$(SRCFILES_C))
+SRCFILES_S=$(subst .s,.o,$(wildcard src/*.s))
+DEBFILES_S=$(subst src,debug,$(SRCFILES_S))
 
 all:debug/final.elf
 	@arm-none-eabi-objdump -D debug/final.elf > debug/final.list
 # arm-none-eabi-objcopy -O binary debug/final.elf debug/final.bin
 	@echo build success
 
-debug/final.elf:debug/_init.o $(DEBFILES)
-	@arm-none-eabi-ld -nostdlib -T $(LDFILE) $^ -Lsrc -lgetchar -o $@
+debug/final.elf: $(DEBFILES_C) $(DEBFILES_S)
+	@arm-none-eabi-ld -nostdlib -T $(LDFILE) $^ $(PIOS_PATH) -o $@
 
-debug/_init.o:src/_init.s
+debug/%.o: src/%.s
 	@arm-none-eabi-as --warn --fatal-warnings -mcpu=cortex-m4 -ggdb $^ -o $@
 
 debug/%.o: src/%.c
