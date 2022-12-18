@@ -1,6 +1,4 @@
 LDFILE=src/linker.ld
-PIOS_KERNEL=getchar
-PIOS_PATH=-Lsrc -l$(PIOS_KERNEL)
 SRCFILES_C=$(subst .c,.o,$(wildcard src/*.c))
 DEBFILES_C=$(subst src,debug,$(SRCFILES_C))
 SRCFILES_S=$(subst .s,.o,$(wildcard src/*.s))
