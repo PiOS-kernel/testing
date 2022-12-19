@@ -11,7 +11,7 @@ void serial_print(char* string_to_print){
         ++i;
         c = string_to_print[i];
     }
-    PUT32(UART0BASE, '\n');
-    PUT32(UART0BASE, '\r');
+    // PUT32(UART0BASE, '\n');
+    // PUT32(UART0BASE, '\r');
 
 }
