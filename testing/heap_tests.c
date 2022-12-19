@@ -1,5 +1,5 @@
 #include "tests.h"
-#include "../../pios-kernel/kernel/heap/heap.h"
+#include "../pios-kernel/kernel/heap/heap.h"
 
 bool heap_init_test() {
     uint8_t heap_mem[1024];
@@ -47,7 +47,7 @@ bool heap_compaction_test() {
     ASSERT(available_space(&heap) == 256);
     ASSERT(count_segments(&heap) == 2);
     
-    heap_compact(&heap);
+    heap_compaction(&heap);
     ASSERT(available_space(&heap) == 256);
     ASSERT(count_segments(&heap) == 1);
     return true;

@@ -1,6 +1,6 @@
 #include "../includes/_common.h"
 #include <stdint.h>
-#include "tests/tests.h"
+#include "../testing/tests.h"
 
 //main - va avanti all'infinito
 int main ( void )
