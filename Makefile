@@ -20,6 +20,7 @@ BUILDFILES_S=$(BUILDSRCFILES_S) $(BUILDKERNELFILES_S)
 all:build/final.elf
 	@arm-none-eabi-objdump -D build/final.elf > build/final.list
 ## arm-none-eabi-objcopy -O binary build/final.elf build/final.bin
+	@rm build/*.o
 	@echo build succeded
 
 # Rule for linking the final executable
