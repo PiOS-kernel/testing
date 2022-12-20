@@ -1,10 +1,12 @@
 #include "../includes/_common.h"
 #include <stdint.h>
 #include "../testing/tests.h"
+#include "../pios-kernel/kernel/kernel.h"
 
 //main - va avanti all'infinito
 int main ( void )
 {    
+    kernel_init();
     test_runner();
     while(1);
     return(0);

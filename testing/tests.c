@@ -62,10 +62,10 @@ void test_runner() {
         serial_print(all_tests[i].name);
         serial_print(" ... ");
         if (all_tests[i].test()) {
-            serial_print("[ok]!");
+            serial_print("[ ok :) ]\n");
             passed++;
         } else {
-            serial_print("[failed]");
+            serial_print("[ failed :( ]\n");
             failed++;
         }
     }

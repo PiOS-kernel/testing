@@ -1,5 +1,6 @@
 #include "tests.h"
 #include "../pios-kernel/kernel/heap/heap.h"
+#include "../includes/tools.h"
 
 bool heap_init_test() {
     uint8_t heap_mem[1024];
@@ -81,7 +82,6 @@ bool test_allocate_segment() {
     ASSERT(count_segments(&heap) == 1);
 
     // Free to segments, and observe heap compaction taking place
-
     free_segment(&heap, segment, 128);
     ASSERT(available_space(&heap) == 640);
     ASSERT(count_segments(&heap) == 2);
@@ -119,7 +119,7 @@ bool test_allocate_segment() {
     segment = allocate_segment(&heap, 128);
     ASSERT(segment != NULL);
     ASSERT(available_space(&heap) == 0);
-    ASSERT(count_segments(&heap) == 1);
+    ASSERT(count_segments(&heap) == 0);
 
     // Since there is no more space, the next allocation should fail
     // and a NULL pointer should be returned
@@ -127,7 +127,7 @@ bool test_allocate_segment() {
     segment = allocate_segment(&heap, 128);
     ASSERT(segment == NULL);
     ASSERT(available_space(&heap) == 0);
-    ASSERT(count_segments(&heap) == 1);
+    ASSERT(count_segments(&heap) == 0);
     
     return true;
 }
