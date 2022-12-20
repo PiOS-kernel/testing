@@ -2,3 +2,6 @@
 *.elf
 *.list
 *.bin
+.gdbinit
+.vscode
+.vscode/*
