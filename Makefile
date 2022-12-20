@@ -7,24 +7,21 @@ TESTFILES_C=$(subst .c,.o,$(wildcard testing/*.c))
 TESTFILES_S=$(subst .s,.o,$(wildcard testing/*.s))
 # Kernel files
 KERNELFILES_C=$(subst .c,.o,$(wildcard pios-kernel/kernel/*.c))
-KERNELFILES_S=$(subst .s,.o,$(wildcard pios-kernel/kernel/*.s))
+KERNELFILES_S=$(subst .s,.o,$(wildcard pios-kernel/kernel/port/gcc*.s))
 HEAPFILES_C=$(subst .c,.o,$(wildcard pios-kernel/kernel/heap/*.c))
-HEAPFILES_S=$(subst .s,.o,$(wildcard pios-kernel/kernel/heap/*.s))
 # SYSCALLSFILES_C=$(subst .c,.o,$(wildcard pios-kernel/kernel/syscalls/*.c))
-# SYSCALLSFILES_S=$(subst .s,.o,$(wildcard pios-kernel/kernel/syscalls/*.s))
-# TASKFILES_C=$(subst .c,.o,$(wildcard pios-kernel/kernel/task/*.c))
-# TASKFILES_S=$(subst .s,.o,$(wildcard pios-kernel/kernel/task/*.s))
+TASKFILES_C=$(subst .c,.o,$(wildcard pios-kernel/kernel/task/*.c))
 
 BUILDSRCFILES_C=$(subst src,build,$(SRCFILES_C))
 BUILDSRCFILES_S=$(subst src,build,$(SRCFILES_S))
 BUILDTESTFILES_C=$(subst testing,build,$(TESTFILES_C))
 BUILDTESTFILES_S=$(subst testing,build,$(TESTFILES_S))
 BUILDKERNELFILES_C=$(subst pios-kernel/kernel,build,$(KERNELFILES_C))
-BUILDKERNELFILES_S=$(subst pios-kernel/kernel,build,$(KERNELFILES_S))
+BUILDKERNELFILES_S=$(subst pios-kernel/kernel/port/gcc,build,$(KERNELFILES_S))
 BUILDHEAPFILES_C=$(subst pios-kernel/kernel/heap,build,$(HEAPFILES_C))
-BUILDHEAPFILES_S=$(subst pios-kernel/kernel/heap,build,$(HEAPFILES_S))
-BUILDFILES_C=$(BUILDSRCFILES_C) $(BUILDTESTFILES_C) $(BUILDKERNELFILES_C) $(BUILDHEAPFILES_C)
-BUILDFILES_S=$(BUILDSRCFILES_S) $(BUILDTESTFILES_S) $(BUILDKERNELFILES_S) $(BUILDHEAPFILES_S)
+BUILDTASKFILES_C=$(subst pios-kernel/kernel/task,build,$(TASKFILES_C))
+BUILDFILES_C=$(BUILDSRCFILES_C) $(BUILDTESTFILES_C) $(BUILDKERNELFILES_C) $(BUILDHEAPFILES_C) $(BUILDTASKFILES_C)
+BUILDFILES_S=$(BUILDSRCFILES_S) $(BUILDTESTFILES_S) $(BUILDKERNELFILES_S)
 
 all:build/final.elf
 	@arm-none-eabi-objdump -D build/final.elf > build/final.list
@@ -45,12 +42,7 @@ build/%.o: src/%.s
 	@[ -d build ] || mkdir build
 	@arm-none-eabi-as --warn --fatal-warnings -mcpu=cortex-m4 -ggdb $^ -o $@
 
-build/%.o: pios-kernel/kernel/heap/%.s
-	@echo assembling $^
-	@[ -d build ] || mkdir build
-	@arm-none-eabi-as --warn --fatal-warnings -mcpu=cortex-m4 -ggdb $^ -o $@
-
-build/%.o: pios-kernel/kernel/%.s
+build/%.o: pios-kernel/kernel/port/gcc/%.s
 	@echo assembling $^
 	@[ -d build ] || mkdir build
 	@arm-none-eabi-as --warn --fatal-warnings -mcpu=cortex-m4 -ggdb $^ -o $@
@@ -68,6 +60,11 @@ build/%.o: src/%.c
 	@arm-none-eabi-gcc -Wall -O0 -mcpu=cortex-m4 -mthumb -nostartfiles -ggdb -c $^ -o $@
 
 build/%.o: pios-kernel/kernel/heap/%.c
+	@echo compiling $^
+	@[ -d build ] || mkdir build
+	@arm-none-eabi-gcc -Wall -O0 -mcpu=cortex-m4 -mthumb -nostartfiles -ggdb -c $^ -o $@
+
+build/%.o: pios-kernel/kernel/task/%.c
 	@echo compiling $^
 	@[ -d build ] || mkdir build
 	@arm-none-eabi-gcc -Wall -O0 -mcpu=cortex-m4 -mthumb -nostartfiles -ggdb -c $^ -o $@
