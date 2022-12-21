@@ -31,6 +31,8 @@ bool test_enqueue() {
         TaskTCB* task = dequeue(&q);
         free(task);
     }
+
+    ASSERT(available_space(&HEAP) == HEAP_SIZE);
     return true;
 }
 
@@ -50,7 +52,9 @@ bool test_dequeue() {
         ASSERT(task->priority == i);
         free(task);
     }
+    
     ASSERT(empty(&q));
+    ASSERT(available_space(&HEAP) == HEAP_SIZE);
     return true;
 }
 

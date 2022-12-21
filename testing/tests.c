@@ -17,9 +17,9 @@ extern bool test_stack_push();
 extern bool test_stack_start();
 extern bool test_stack_end();
 
-/*// Syscalls tests
+// Syscalls tests
 extern bool test_create_task();
-extern bool test_task_switch();*/
+/*extern bool test_task_switch();*/
 
 // Utility functions tests
 extern bool test_memcpy();
@@ -45,9 +45,9 @@ Test all_tests[] = {
     { "test_stack_start", test_stack_start },
     { "test_stack_end", test_stack_end },
 
-    /*// Syscalls tests
+    // Syscalls tests
     { "test_create_task", test_create_task },
-    { "test_task_switch", test_task_switch },*/
+    /*{ "test_task_switch", test_task_switch },*/
 
     // Utility functions tests
     { "test_memcpy", test_memcpy }
