@@ -55,7 +55,7 @@ build/%.o: testing/%.c
 # Rule for cleaning the build directory
 
 clean:
-	@rm -r build/*.o build/*.elf build/*.list
+	@rm -r build/*.elf build/*.list
 ## build/*.bin
 
 # Rule for running the executable in qemu with gdb
