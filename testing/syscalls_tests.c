@@ -35,3 +35,13 @@ bool test_create_task() {
     free(created_task);
     return true;
 }
+
+bool test_task_switch() {
+    char* name = "Mario!";
+    kcreate_task(mock_task, (void*) name, 0);
+
+    task_switch();
+    asm volatile ("pop {pc}\n");
+
+    return true;
+}
