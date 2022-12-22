@@ -18,7 +18,7 @@ bool test_enqueue() {
     Queue q;
     Queue_init(&q);
     for (int i=0; i<5; i++) {
-        TaskTCB* task = (TaskTCB*) malloc(sizeof(TaskTCB));
+        TaskTCB* task = (TaskTCB*) alloc(sizeof(TaskTCB));
 
         enqueue(&q, task);
         ASSERT(!empty(&q));
@@ -40,7 +40,7 @@ bool test_dequeue() {
     Queue q;
     Queue_init(&q);
     for (int i=0; i<5; i++) {
-        TaskTCB* task = (TaskTCB*) malloc(sizeof(TaskTCB));
+        TaskTCB* task = (TaskTCB*) alloc(sizeof(TaskTCB));
         TaskTCB_init(task, i);
 
         enqueue(&q, task);
