@@ -66,7 +66,7 @@ gdb:
 
 # Rule for running the executable in qemu without gdb
 
-test:
+unit:
 	@(make clean && make) || make
 	@qemu-system-arm -cpu cortex-m4 -machine lm3s6965evb -nographic -kernel build/final.elf
 ##qemu-system-arm -cpu cortex-m4 -machine lm3s6965evb -nographic -semihosting-config enable=on,target=native -gdb tcp::3333 -kernel main

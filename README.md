@@ -1,10 +1,10 @@
-# simulation-debugging
-Default project for debug and simulation using gdb and qemu
+# πOS repo for testing
+This repository includes kernel code as a submodule, and it contains code to run unit and integration tests.
 
-### How to simulate and debug
-1. launch compilation with `make` command
-2. launch simulation with qemu typing `make gdb`
-3. in another terminal windows, type the following command `gdb-multiarch -q executable_file.elf` to open the gdb console.\
+### Running tests
+1. `make unit` to run the unit tests. When issuing this command the executable will be recompiled from scratch.
+2. If you need to debug the code using GDB, issue `make gdb`. Also this command recompiles all the suorce files.
+3. When running the tests with GDB, in another terminal window type the following command `gdb-multiarch -q executable_file.elf` to open the gdb console.\
 Then on gdb console type `target remote :3333` to connect to qemu via tcp.\
 To add a breakpoint, use the command `break _symbol` where `_symbol` represents a valid memory symbol.\
 To let the execution begin, type `continue`; this will execute the program until the following breakpoint. Otherwise, use the command `next` to proceed to the following code line.
