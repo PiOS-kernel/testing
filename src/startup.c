@@ -27,7 +27,7 @@ __attribute__((weak, alias("_defaultHandler"))) void HardFaultISR();
 __attribute__((weak, alias("_defaultHandler"))) void MemManageISR();
 __attribute__((weak, alias("_defaultHandler"))) void BusFaultISR();
 __attribute__((weak, alias("_defaultHandler"))) void UsageFaultIsr();
-void SVCallISR();
+extern void SVCallISR();
 __attribute__((weak, alias("_defaultHandler"))) void DebugMonitorISR();
 __attribute__((weak, alias("_defaultHandler"))) void PendsvISR();
 void SysTickISR();
@@ -105,4 +105,3 @@ void ResetISR()
 void SysTickISR(){
     serial_print("Hello World\n");
 }
-
