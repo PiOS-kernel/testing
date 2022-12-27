@@ -5,4 +5,4 @@
 .gdbinit
 .vscode
 .vscode/*
-.gitsubmodules
+.gitmodules
