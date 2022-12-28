@@ -3,19 +3,50 @@
 #include "../testing/tests.h"
 #include "../pios-kernel/kernel/kernel.h"
 
+int shared = 0;
+MCB* my_mutex;
+void task1(void *arg);
+void task2(void *arg);
+extern void PendSVTrigger();
+
 //main - va avanti all'infinito
-int main ( void )
+void main ( void )
 {    
-    kernel_init();
-    test_runner();
-    while(1);
-    return(0);
+    my_mutex = mutex_init();
+    create_task(task1, 0, 0);
+    create_task(task2, 0, 0);
+    //PendSVTrigger();
+    //while(1);
 }
 
-
-
-void HardFaultISR()
+void task1(void *arg)
 {
-    serial_print("HardFault, baby!\n");
-	while(1);
+    char number[10];
+    while(1)
+    {
+        mutex_wait(my_mutex);
+        shared++;
+        itoa(shared, number);
+        serial_print("Task1: shared = ");
+        serial_print(number);
+        serial_print("\n");
+        mutex_post(my_mutex);
+        task_switch();
+    }
 }
+void task2(void *arg)
+{
+    char number[10];
+    while(1)
+    {
+        mutex_wait(my_mutex);
+        shared++;
+        itoa(shared, number);
+        serial_print("Task2: shared = ");
+        serial_print(number);
+        serial_print("\n");
+        mutex_post(my_mutex);
+        task_switch();
+    }
+}
+

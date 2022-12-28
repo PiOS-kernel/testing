@@ -2,7 +2,7 @@
 .global _start
 _start:
 stacktop: .word __end__
-.word ResetISR
+.word Reset_Handler
 
 .thumb_func
 .global PUT32
