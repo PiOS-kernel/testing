@@ -31,7 +31,7 @@ void task1(void *arg)
         serial_print(number);
         serial_print("\n");
         mutex_post(my_mutex);
-        task_switch();
+        // task_switch();
     }
 }
 void task2(void *arg)
@@ -46,7 +46,7 @@ void task2(void *arg)
         serial_print(number);
         serial_print("\n");
         mutex_post(my_mutex);
-        task_switch();
+        // task_switch();
     }
 }
 

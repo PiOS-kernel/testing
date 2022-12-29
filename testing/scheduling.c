@@ -1,7 +1,7 @@
 #include <stdint.h>
 #include <stdbool.h>
-#include "../../pios-kernel/kernel/kernel.h"
-#include "../../includes/tools.h"
+#include "../pios-kernel/kernel/kernel.h"
+#include "../includes/tools.h"
 #include "integration.h"
 
 typedef struct PublishedData {

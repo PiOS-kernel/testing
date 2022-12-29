@@ -1,6 +1,7 @@
 #include "integration.h"
 #include "tests.h"
-#include "../../includes/tools.h"
+#include "../includes/tools.h"
+#include "../pios-kernel/kernel/kernel.h"
 
 RunnerState runner_state = {0, 0, 0};
 int scheduler_state = 0;
