@@ -105,13 +105,12 @@ void Reset_Handler()
     // __asm__("MOV R0, #0x00000001\n\t");
     // __asm__("MSR CONTROL, R0\n\t");
     // __asm__("MRS R0, CONTROL\n\t");
-    __asm__("MOV R0, #01");
-    __asm__("MSR CONTROL, R0");
+    // __asm__("MOV R0, #01");
+    // __asm__("MSR CONTROL, R0");
 	kernel_init();
     //create_task((void(*)(void*)) main, (void*)0, 0);
     main();
-    __asm volatile ("cpsie i");
+    //__asm volatile ("cpsie i");
     PendSVTrigger();
-
     while(1);
 }

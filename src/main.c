@@ -15,8 +15,6 @@ void main ( void )
     my_mutex = mutex_init();
     create_task(task1, 0, 0);
     create_task(task2, 0, 0);
-    //PendSVTrigger();
-    //while(1);
 }
 
 void task1(void *arg)
@@ -26,12 +24,15 @@ void task1(void *arg)
     {
         mutex_wait(my_mutex);
         shared++;
+        if(shared > 10){
+            while(1);
+        }
         itoa(shared, number);
         serial_print("Task1: shared = ");
         serial_print(number);
         serial_print("\n");
         mutex_post(my_mutex);
-        // task_switch();
+        PendSVTrigger();
     }
 }
 void task2(void *arg)
@@ -46,7 +47,7 @@ void task2(void *arg)
         serial_print(number);
         serial_print("\n");
         mutex_post(my_mutex);
-        // task_switch();
+        PendSVTrigger();
     }
 }
 
