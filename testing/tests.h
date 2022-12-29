@@ -4,6 +4,11 @@
 // Assert is defined as a macro
 #define ASSERT(expr) if (!(expr)) { return false; }
 
-void test_runner();
+typedef struct Test {
+    char *name;
+    bool (*test)();
+} Test;
+
+void tests_runner();
 
 #endif

@@ -1,5 +1,5 @@
 #include "integration.h"
-#include "../tests.h"
+#include "tests.h"
 #include "../../includes/tools.h"
 
 RunnerState runner_state = {0, 0, 0};
@@ -14,7 +14,7 @@ Test tests[] = {
     {"test_producer_consumer", test_producer_consumer},
 };
 
-void integration_tests_runner() {
+void tests_runner() {
     while(1);
     int tests_count = sizeof(tests)/sizeof(Test);
 
