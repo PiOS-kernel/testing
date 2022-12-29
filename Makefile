@@ -64,6 +64,10 @@ gdb:
 
 # Rule for running the executable in qemu without gdb
 
+run:
+	@make clean && make
+	@qemu-system-arm -cpu cortex-m3 -machine lm3s6965evb -nographic -kernel build/final.elf
+
 unit:
 	@make clean && make
 	@qemu-system-arm -cpu cortex-m3 -machine lm3s6965evb -nographic -kernel build/final.elf
