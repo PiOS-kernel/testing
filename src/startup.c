@@ -96,22 +96,15 @@ void Reset_Handler()
 		*pDst++ = 0;
 	}
 
-    //setup SysTick
-    // SysTick_init();
-    // SysTick_setLOAD(12000000); // +- 1ms
+    // setup SysTick
+    // SysTick_init(12000000); // +- 1ms
     // SysTick_enable();
-	
+    
     // __asm__("MRS R0, CONTROL\n\t");
-    // __asm__("MOV R0, #0x00000001\n\t");
-    // __asm__("MSR CONTROL, R0\n\t");
-    // __asm__("MRS R0, CONTROL\n\t");
-    __asm__("MOV R0, #01");
-    __asm__("MSR CONTROL, R0");
+    //__asm__("MOV R0, #0");
+    //__asm__("MSR CONTROL, R0");
 	kernel_init();
     //create_task((void(*)(void*)) main, (void*)0, 0);
     main();
-    __asm volatile ("cpsie i");
-    PendSVTrigger();
-
     while(1);
 }
