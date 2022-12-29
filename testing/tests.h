@@ -1,6 +1,8 @@
 #ifndef TESTS_H
 #define TESTS_H
 
+#include <stdbool.h>
+
 // Assert is defined as a macro
 #define ASSERT(expr) if (!(expr)) { return false; }
 
