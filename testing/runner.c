@@ -1,4 +1,5 @@
 #include "tests.h"
+#include "msp.h"
 #include "../includes/tools.h"
 #include "../pios-kernel/kernel/kernel.h"
 #include "../pios-kernel/kernel/exceptions.h"
@@ -16,13 +17,16 @@ Test tests[] = {
 };
 
 void tests_runner() {
+    WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;     // stop watchdog timer
+
     int tests_count = sizeof(tests)/sizeof(Test);
 
     int passed = 0;
     int failed = 0;
     serial_print("\nRunning integration tests...\n\n");
 
-    for (int i=0; i<tests_count; ++i) {
+    int i=0;
+    for (; i<tests_count; ++i) {
         serial_print(tests[i].name);
         serial_print(" ... ");
 

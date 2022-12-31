@@ -13,7 +13,8 @@ typedef struct SharedData {
 } SharedData;
 
 void producer_task(SharedData* data) {
-    for (int i=0; i<10; ++i) {
+    int i=0;
+    for (; i<10; ++i) {
         // waits for the consumer task to consume data
         while (!data->consumed)
             PendSVTrigger(); // yield
@@ -26,7 +27,8 @@ void producer_task(SharedData* data) {
 }
 
 void consumer_task(SharedData* data) {
-    for (int i=0; i<10; ++i) {
+    int i=0;
+    for (; i<10; ++i) {
         // waits for the producer task to publish data
         while (data->consumed)
             PendSVTrigger(); // yield
