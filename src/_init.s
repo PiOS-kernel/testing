@@ -1,8 +1,11 @@
-	.thumb
-	.global PUT32
+.thumb_func
+.global _start
+_start:
+stacktop: .word __end__
+.word Reset_Handler
 
-PUT32: .asmfunc
+.thumb_func
+.global PUT32
+PUT32:
     str r1,[r0]
     bx lr
-
-    .endasmfunc
