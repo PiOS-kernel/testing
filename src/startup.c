@@ -1,4 +1,7 @@
 #include "../includes/_common.h"
+#include "../testing/tests.h"
+#include "../pios-kernel/kernel/kernel.h"
+#include "../pios-kernel/kernel/exceptions.h"
 #include <stdint.h>
 
 #define SRAM_START  0x20000000U
@@ -14,13 +17,6 @@ extern uint32_t _la_data;
 
 extern uint32_t _sbss;
 extern uint32_t _ebss;
-
-/* prototypes */
-extern void kernel_init(void);
-extern void create_task(void (*code)(void *), void* args, uint8_t priority);
-extern void enable_interrupts(void);
-extern void PendSVTrigger(void);
-extern void main(void);
 
 /* Forward declaration of the default fault handlers. */
 void Default_Handler            (void) __attribute__((weak));
@@ -62,8 +58,6 @@ void (* const g_pfnVectors[])(void) =
     IRQGeneralISR,                         /* IRQ general               */
 };
 
-
-
 void Default_Handler()
 {
 	while(1);
@@ -97,14 +91,14 @@ void Reset_Handler()
 	}
 
     // setup SysTick
-    // SysTick_init(12000000); // +- 1ms
-    // SysTick_enable();
+    SysTick_init(120000); // +- 1ms
+    SysTick_enable();
     
     // __asm__("MRS R0, CONTROL\n\t");
     //__asm__("MOV R0, #0");
     //__asm__("MSR CONTROL, R0");
 	kernel_init();
-    //create_task((void(*)(void*)) main, (void*)0, 0);
-    main();
+    create_task((void(*)(void*)) tests_runner, (void*)0, 0);
+    start_scheduler();
     while(1);
 }
