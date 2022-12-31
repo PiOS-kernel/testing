@@ -8,7 +8,7 @@
 
 typedef struct Test {
     char *name;
-    bool (*test)();
+    void (*test)();
 } Test;
 
 void tests_runner();

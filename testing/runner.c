@@ -20,7 +20,7 @@ void tests_runner() {
 
     int passed = 0;
     int failed = 0;
-    serial_print("\nRunning integration tests...\n");
+    serial_print("\nRunning integration tests...\n\n");
 
     for (int i=0; i<tests_count; ++i) {
         serial_print(tests[i].name);

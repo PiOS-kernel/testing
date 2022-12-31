@@ -49,8 +49,8 @@ void consumer_task(SharedData* data) {
 void test_producer_consumer() {
     SharedData data = {0, true};
     // create the tasks
-    kcreate_task((void(*)(void*)) producer_task, (void*)&data, 0);
-    kcreate_task((void(*)(void*)) consumer_task, (void*)&data, 0);
+    create_task((void(*)(void*)) producer_task, (void*)&data, 0);
+    create_task((void(*)(void*)) consumer_task, (void*)&data, 0);
 
     // The runner is stuck here until the test is completed
     while(!test_completed)
