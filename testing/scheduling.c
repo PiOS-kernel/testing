@@ -2,60 +2,57 @@
 #include <stdbool.h>
 #include "../pios-kernel/kernel/kernel.h"
 #include "../includes/tools.h"
-#include "integration.h"
+#include "../pios-kernel/kernel/exceptions.h"
 
-typedef struct PublishedData {
+extern bool test_completed;
+extern bool test_result;
+
+typedef struct SharedData {
     uint32_t data;
     bool consumed;
-} PublishedData;
+} SharedData;
 
-bool producer_running = true;
-bool consumer_running = true;
-PublishedData data = {0, true};
-
-void producer_task(PublishedData* data) {
-    for (int i=0; i<100; ++i) {
+void producer_task(SharedData* data) {
+    for (int i=0; i<10; ++i) {
         // waits for the consumer task to consume data
-        while (!data->consumed);
+        while (!data->consumed)
+            PendSVTrigger(); // yield
 
         data->data = i;
         data->consumed = false;
     }
     
-    producer_running = false;
-    while(1); // the task waits forever
+    exit();
 }
 
-void consumer_task(PublishedData* data) {
-    for (int i=0; i<100; ++i) {
+void consumer_task(SharedData* data) {
+    for (int i=0; i<10; ++i) {
         // waits for the producer task to publish data
-        while (data->consumed);
+        while (data->consumed)
+            PendSVTrigger(); // yield
 
         if (data->data != i) {
             test_result = false;
-            while(1); // the task waits forever
+            test_completed = true;
+            exit();
         }
         data->consumed = true;
     }
 
+    // Publish the test result
     test_result = true;
-    producer_running = false;
-    while(1); // the task waits forever
+    test_completed = true;
+    
+    exit();
 }
 
-// The task checks wether both the producer and the consumer are finshed and 
-// deactivates the scheduler
-
-void checker_task() {
-    while (producer_running || consumer_running);
-
-    // The scheduler is deactivated
-    scheduler_state = 0;
-}
-
-bool test_producer_consumer() {
+void test_producer_consumer() {
+    SharedData data = {0, true};
     // create the tasks
-    kcreate_task(producer_task, (void*)&data, 0);
-    kcreate_task(consumer_task, (void*)&data, 0);
-    kcreate_task(checker_task, NULL, 0);
+    kcreate_task((void(*)(void*)) producer_task, (void*)&data, 0);
+    kcreate_task((void(*)(void*)) consumer_task, (void*)&data, 0);
+
+    // The runner is stuck here until the test is completed
+    while(!test_completed)
+        PendSVTrigger();
 }
