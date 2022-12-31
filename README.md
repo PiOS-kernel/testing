@@ -31,7 +31,7 @@ void test_producer_consumer() {
 The tasks that run the test are responsible of communicating when the test is completed and whether it was successfull or not. Also, after compleating their
 job they should terminate by calling `exit()` syscall. Refer to [this test](testing/scheduling.c) to check out the correct behavior of test tasks.
 
-## Running tests
+## Running tests in Qemu
 1. `make test` to run the integration tests. When issuing this command the executable will be recompiled from scratch.
 2. If you need to debug the code using GDB, issue `make gdb`. Also this command recompiles all the suorce files.
 3. When running the tests with GDB, in another terminal window type the following command `gdb-multiarch -q executable_file.elf` to open the gdb console.\
@@ -69,3 +69,16 @@ In ordet to debug using VSCode GUI, you need to install Native Debug extension (
 4. use VSCode GUI to debug your code
 5. when the program terminates, disconnect the gdb debug session (red icon of VSCode debugger GUI) and in qemu terminal press `control+a` and then `x`
 
+
+## Running tests on the MSP432 board
+
+1. Create a brand new ccs project.
+2. Open a shell inside the ccs project directory:
+```
+$ git clone https://github.com/PiOS-kernel/testing.git
+$ git checkout msp-port
+$ git submodule update --init --recursive --remote
+```
+3. Exclude from the build:
+    * pios-kernel/kernel/port/ccs
+    * pios-kernel/testing
