@@ -4,9 +4,7 @@
 #include "../pios-kernel/kernel/exceptions.h"
 
 // Set to true by the test tasks when the test is completed.
-bool test_completed = false;
-// Set to true by the test tasks if the test passes. 
-bool test_result = false; 
+extern EventHandle test_completed_event;
 
 // Producer consumer test
 extern void test_producer_consumer();
@@ -28,8 +26,12 @@ void tests_runner() {
 
         // Setup the test
         tests[i].test();
+        event_wait(test_completed_event);
 
-        if (test_result) {
+        // The test result is retrieved
+        uint32_t test_result;
+        get_event_msg(test_completed_event, &test_result);
+        if (test_result == 1) {
             serial_println("[ ok ]");
             passed++;
         } else {

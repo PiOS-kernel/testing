@@ -18,6 +18,8 @@ extern uint32_t _la_data;
 extern uint32_t _sbss;
 extern uint32_t _ebss;
 
+EventHandle test_completed_event;
+
 /* Forward declaration of the default fault handlers. */
 void Default_Handler            (void) __attribute__((weak));
 extern void Reset_Handler       (void) __attribute__((weak));
@@ -98,6 +100,10 @@ void Reset_Handler()
     //__asm__("MOV R0, #0");
     //__asm__("MSR CONTROL, R0");
 	kernel_init();
+
+    // The 'test completed' event is created
+    test_completed_event = NEW_EVENT(uint32_t);
+
     create_task((void(*)(void*)) tests_runner, (void*)0, 0);
     start_scheduler();
     while(1);

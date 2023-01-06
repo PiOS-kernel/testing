@@ -4,8 +4,7 @@
 #include "../includes/tools.h"
 #include "../pios-kernel/kernel/exceptions.h"
 
-extern bool test_completed;
-extern bool test_result;
+extern EventHandle test_completed_event;
 
 typedef struct SharedData {
     uint32_t data;
@@ -26,33 +25,36 @@ void producer_task(SharedData* data) {
 }
 
 void consumer_task(SharedData* data) {
+    uint32_t test_result = 0;
+
     for (int i=0; i<10; ++i) {
         // waits for the producer task to publish data
         while (data->consumed)
             PendSVTrigger(); // yield
 
         if (data->data != i) {
-            test_result = false;
-            test_completed = true;
+            event_post(test_completed_event, &test_result);
             exit();
         }
         data->consumed = true;
     }
 
+    // The data necessary for the test is deallocated
+    free(data);
+
     // Publish the test result
-    test_result = true;
-    test_completed = true;
+    test_result = 1;
+    event_post(test_completed_event, &test_result);
     
     exit();
 }
 
 void test_producer_consumer() {
-    SharedData data = {0, true};
-    // create the tasks
-    create_task((void(*)(void*)) producer_task, (void*)&data, 0);
-    create_task((void(*)(void*)) consumer_task, (void*)&data, 0);
+    SharedData* data = (SharedData*) alloc(sizeof(SharedData));
+    data->consumed = true;
+    data->data = 0;
 
-    // The runner is stuck here until the test is completed
-    while(!test_completed)
-        PendSVTrigger();
+    // create the tasks
+    create_task((void(*)(void*)) producer_task, (void*)data, 0);
+    create_task((void(*)(void*)) consumer_task, (void*)data, 0);
 }
