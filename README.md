@@ -5,7 +5,7 @@ This repository includes kernel code as a submodule, and it contains code to run
 
 Each integration test is organized as a setup function, and a set of tasks that interact between each other and that communicate the result of the test once it is completed.
 
-A **test_runner** task is responsible for executing tests. Before running a test it calls its setup function, which instantiates the data necessary for the test, creates the tasks and yields control to them until the test is finished. The general scheme for a setup function is the following:
+A **test_runner** task is responsible for executing tests. Before running a test it calls its setup function, which instantiates the data necessary for the test, creates the tasks and yields control of the CPU, until the test is finished. The general scheme for a setup function is the following:
 
 ```
 typedef struct SharedData {...} SharedData;
@@ -19,17 +19,12 @@ void test_producer_consumer() {
     // INITIALIZATION OF THE TEST TASKS
     create_task((void(*)(void*)) producer_task, (void*)&data, 0);
     create_task((void(*)(void*)) consumer_task, (void*)&data, 0);
-
-    // THE FUNCTION SHOULD NOT RETURN UNTIL THE TEST HAS BEEN COMPLETED,
-    // BECAUSE TEST RELATED DATA HAS BEEN INSTANTIATED ONTO THE STACK, WHICH
-    // WOULD BE ERASED IF THE FUNCTION RETURNS.
-    while(!test_completed)
-        PendSVTrigger();
 }
 ```
 
-The tasks that run the test are responsible of communicating when the test is completed and whether it was successfull or not. Also, after compleating their
-job they should terminate by calling `exit()` syscall. Refer to [this test](testing/scheduling.c) to check out the correct behavior of test tasks.
+The result of a test is communicated to the test runner by signaling through a dedicated event, `test_completed_event`. One of the tasks running the test should post to that event and communicate the result of the test in the event message payload.
+
+The tasks are responsible for deallocating the memory used for the test once the test is completed. The test tasks should terminate by calling the `exit()` syscall. Refer to [this test](testing/scheduling.c) to check out the correct behavior of test tasks.
 
 ## Running tests
 1. `make test` to run the integration tests. When issuing this command the executable will be recompiled from scratch.
