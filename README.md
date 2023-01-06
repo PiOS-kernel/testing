@@ -1,8 +1,38 @@
 # πOS repo for testing
-This repository includes kernel code as a submodule, and it contains code to run unit and integration tests.
+This repository includes kernel code as a submodule, and it contains code to run integration tests.
 
-### Running tests
-1. `make unit` to run the unit tests. When issuing this command the executable will be recompiled from scratch.
+## Writing an integration test
+
+Each integration test is organized as a setup function, and a set of tasks that interact between each other and that communicate the result of the test once it is completed.
+
+A **test_runner** task is responsible for executing tests. Before running a test it calls its setup function, which instantiates the data necessary for the test, creates the tasks and yields control to them until the test is finished. The general scheme for a setup function is the following:
+
+```
+typedef struct SharedData {...} SharedData;
+void producer_task(SharedData* data);
+void consumer_task(SharedData* data);
+
+void test_producer_consumer() {
+    // INSTANTIATION OF DATA NECESSARY FOR THE TEST
+    SharedData data = {0, true};
+    
+    // INITIALIZATION OF THE TEST TASKS
+    create_task((void(*)(void*)) producer_task, (void*)&data, 0);
+    create_task((void(*)(void*)) consumer_task, (void*)&data, 0);
+
+    // THE FUNCTION SHOULD NOT RETURN UNTIL THE TEST HAS BEEN COMPLETED,
+    // BECAUSE TEST RELATED DATA HAS BEEN INSTANTIATED ONTO THE STACK, WHICH
+    // WOULD BE ERASED IF THE FUNCTION RETURNS.
+    while(!test_completed)
+        PendSVTrigger();
+}
+```
+
+The tasks that run the test are responsible of communicating when the test is completed and whether it was successfull or not. Also, after compleating their
+job they should terminate by calling `exit()` syscall. Refer to [this test](testing/scheduling.c) to check out the correct behavior of test tasks.
+
+## Running tests
+1. `make test` to run the integration tests. When issuing this command the executable will be recompiled from scratch.
 2. If you need to debug the code using GDB, issue `make gdb`. Also this command recompiles all the suorce files.
 3. When running the tests with GDB, in another terminal window type the following command `gdb-multiarch -q executable_file.elf` to open the gdb console.\
 Then on gdb console type `target remote :3333` to connect to qemu via tcp.\
