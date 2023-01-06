@@ -8,9 +8,11 @@ extern EventHandle test_completed_event;
 
 // Producer consumer test
 extern void test_producer_consumer();
+extern void test_events();
 
 Test tests[] = {
     {"test_producer_consumer", test_producer_consumer},
+    {"test_events", test_events}
 };
 
 void tests_runner() {
