@@ -15,7 +15,7 @@ void producer_task(SharedData* data) {
     for (int i=0; i<10; ++i) {
         // waits for the consumer task to consume data
         while (!data->consumed)
-            PendSVTrigger(); // yield
+            yield();
 
         data->data = i;
         data->consumed = false;
@@ -30,7 +30,7 @@ void consumer_task(SharedData* data) {
     for (int i=0; i<10; ++i) {
         // waits for the producer task to publish data
         while (data->consumed)
-            PendSVTrigger(); // yield
+            yield();
 
         if (data->data != i) {
             event_post(test_completed_event, &test_result);
@@ -40,7 +40,7 @@ void consumer_task(SharedData* data) {
     }
 
     // The data necessary for the test is deallocated
-    free(data);
+    free((uint8_t*) data, sizeof(SharedData));
 
     // Publish the test result
     test_result = 1;

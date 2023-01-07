@@ -31,7 +31,7 @@ void tests_runner() {
         event_wait(test_completed_event);
 
         // The test result is retrieved
-        uint32_t test_result;
+        bool test_result;
         get_event_msg(test_completed_event, &test_result);
         if (test_result == 1) {
             serial_println("[ ok ]");
@@ -40,8 +40,6 @@ void tests_runner() {
             serial_println("[ failed ]");
             failed++;
         }
-
-        test_result = false;
     }
 
     char test_passed[10];

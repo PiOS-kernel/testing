@@ -96,13 +96,15 @@ void Reset_Handler()
     SysTick_init(120000); // +- 1ms
     SysTick_enable();
     
-    // __asm__("MRS R0, CONTROL\n\t");
-    //__asm__("MOV R0, #0");
-    //__asm__("MSR CONTROL, R0");
+    // go to user mode
+    __asm__("MRS R0, CONTROL\n\t");
+    __asm__("MOV R0, #1\n\t");
+    __asm__("MSR CONTROL, R0\n\t");
+
 	kernel_init();
 
     // The 'test completed' event is created
-    test_completed_event = NEW_EVENT(uint32_t);
+    test_completed_event = NEW_EVENT(bool);
 
     create_task((void(*)(void*)) tests_runner, (void*)0, 0);
     start_scheduler();

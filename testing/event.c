@@ -21,7 +21,7 @@ void task1(EventHandle event) {
         payload += 1;
         // The scheduler is called, but this task should be the only one
         // in the ready queue.
-        PendSVTrigger();
+        yield();
     }
 
     event_post(event, &payload);
@@ -34,7 +34,7 @@ void task2(EventHandle event) {
         msg += 1;
         // The scheduler is called, but this task should be the only one
         // in the ready queue.
-        PendSVTrigger();
+        yield();
     }
 
     // Task 2 sends the message to task 1, and the waits to be woken
@@ -44,6 +44,10 @@ void task2(EventHandle event) {
 
     // The task expects the message payload to be 20.
     get_event_msg(event, &msg);
+
+    // The memory allocated for the event object is reclaimed.
+    delete_event(event);
+
     if (msg != 20) msg = 0;
     else msg = 1;
 
