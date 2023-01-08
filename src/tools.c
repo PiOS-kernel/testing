@@ -47,3 +47,9 @@ void itoa(int n, char* dst) {
         dst[i - j - 1] = temp;
     }
 }
+
+void serial_print_int(int n){
+    char number[10];
+    itoa(n, number);
+    serial_print(number);
+}
