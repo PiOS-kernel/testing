@@ -7,47 +7,78 @@ int shared = 0;
 MCB* my_mutex;
 void task1(void *arg);
 void task2(void *arg);
+void task3(void *arg);
+void task4(void *arg);
 extern void PendSVTrigger();
 
-//main - va avanti all'infinito
+void busy_wait(uint32_t n){
+    for(int i = 0; i < n; i++);
+}
+
+void job(){
+    shared++;
+    serial_print("S->");
+    serial_print_int(shared);
+    serial_print("\n");
+    //busy waiting
+    //busy_wait(0xFFFFFF);
+    //serial_print("Job done\n");
+} 
+
+
 void main ( void )
 {    
-    my_mutex = mutex_init();
-    create_task(task1, 0, 0);
-    create_task(task2, 0, 0);
+    my_mutex = semaphore_init(2);
+    create_task(task1, 0, 6);
+    
 }
 
 void task1(void *arg)
 {
+    serial_print("T1 inside\n");
     char number[10];
-    while(1)
-    {
-        mutex_wait(my_mutex);
-        shared++;
-        if(shared > 10){
-            while(1);
-        }
-        itoa(shared, number);
-        serial_print("Task1: shared = ");
-        serial_print(number);
-        serial_print("\n");
-        mutex_post(my_mutex);
-        PendSVTrigger();
-    }
+    synch_wait(my_mutex);
+    job();
+    create_task(task2, 0, 5);
+    PendSVTrigger();
+    while(1);
+    
+
 }
 void task2(void *arg)
 {
+    serial_print("T2 inside\n");
     char number[10];
-    while(1)
-    {
-        mutex_wait(my_mutex);
-        shared++;
-        itoa(shared, number);
-        serial_print("Task2: shared = ");
-        serial_print(number);
-        serial_print("\n");
-        mutex_post(my_mutex);
-        PendSVTrigger();
-    }
+    synch_wait(my_mutex);
+    job();
+    create_task(task3, 0, 4);
+    PendSVTrigger();
+    // when waken up, post the mutex
+    synch_post(my_mutex);
+    PendSVTrigger();
+    while(1);
+
+}
+void task3(void *arg)
+{
+    serial_print("T3 inside\n");
+    char number[10];
+    synch_wait(my_mutex);
+    job();
+    //create_task(task4, 0, 1);
+    PendSVTrigger();
+    while(1);
+    
+
+}
+void task4(void *arg)
+{
+    serial_print("T3 inside\n");
+    char number[10];
+    synch_wait(my_mutex);
+    job();
+    PendSVTrigger();
+    while(1);
+
 }
 
