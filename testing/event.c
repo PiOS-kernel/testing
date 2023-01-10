@@ -4,7 +4,7 @@
 
 extern EventHandle test_completed_event;
 
-void task1(EventHandle event) {
+void events_test_task1(EventHandle event) {
     // Task 1 waits on event 1
     event_wait(event);
 
@@ -28,7 +28,7 @@ void task1(EventHandle event) {
     exit();
 }
 
-void task2(EventHandle event) {
+void events_test_task2(EventHandle event) {
     uint32_t msg = 0;
     for (int i=1; i<=10; ++i) {
         msg += 1;
@@ -59,6 +59,6 @@ void task2(EventHandle event) {
 void test_events() {
     EventHandle event = NEW_EVENT(uint32_t);
 
-    create_task((void(*)(void*)) task1, (void*)event, 0);
-    create_task((void(*)(void*)) task2, (void*)event, 0);
+    create_task((void(*)(void*)) events_test_task1, (void*)event, 0);
+    create_task((void(*)(void*)) events_test_task2, (void*)event, 0);
 }
