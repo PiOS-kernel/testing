@@ -1,4 +1,4 @@
 [submodule "pios-kernel"]
 	path = pios-kernel
 	url = https://github.com/PiOS-kernel/Kernel.git
-	branch = synch-feat
+	branch = dev

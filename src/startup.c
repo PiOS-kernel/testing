@@ -30,7 +30,7 @@ extern void NMI_Handler         (void) __attribute__((weak, alias("Default_Handl
 extern void MemManage_Handler   (void) __attribute__((weak, alias("Default_Handler")));
 extern void BusFault_Handler    (void) __attribute__((weak, alias("Default_Handler")));
 extern void UsageFault_Handler  (void) __attribute__((weak, alias("Default_Handler")));
-extern void SVCallISR         (void) __attribute__((weak, alias("Default_Handler")));
+extern void SVC_Handler         (void) __attribute__((weak, alias("Default_Handler")));
 extern void DebugMon_Handler    (void) __attribute__((weak, alias("Default_Handler")));
 extern void PendSV_Handler      (void) __attribute__((weak, alias("Default_Handler")));
 extern void SysTick_Handler     (void) __attribute__((weak,alias("Default_Handler")));
@@ -52,7 +52,7 @@ void (* const g_pfnVectors[])(void) =
     0,                                     /* Reserved                  */
     0,                                     /* Reserved                  */
     0,                                     /* Reserved                  */
-    SVCallISR,                             /* SVCall handler            */
+    SVC_Handler,                             /* SVCall handler            */
     DebugMon_Handler,                      /* Debug monitor handler     */
     0,                                     /* Reserved                  */
     PendSV_Handler,                        /* The PendSV handler        */
