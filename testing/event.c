@@ -14,7 +14,7 @@ void events_test_task1(EventHandle event) {
     // The task expects the message payload to be 10.
     if (payload != 10) {
         event_post(event, &payload);
-        exit();
+        task_exit();
     }
 
     for (int i=1; i<=10; ++i) {
@@ -25,7 +25,7 @@ void events_test_task1(EventHandle event) {
     }
 
     event_post(event, &payload);
-    exit();
+    task_exit();
 }
 
 void events_test_task2(EventHandle event) {
@@ -53,12 +53,12 @@ void events_test_task2(EventHandle event) {
 
     event_post(test_completed_event, &msg);
 
-    exit();
+    task_exit();
 }
 
 void test_events() {
     EventHandle event = NEW_EVENT(uint32_t);
 
-    create_task((void(*)(void*)) events_test_task1, (void*)event, 0);
-    create_task((void(*)(void*)) events_test_task2, (void*)event, 0);
+    create_task((void(*)(void*)) events_test_task1, (void*)event, 0, NULL);
+    create_task((void(*)(void*)) events_test_task2, (void*)event, 0, NULL);
 }

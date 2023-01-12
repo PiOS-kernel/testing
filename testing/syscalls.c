@@ -7,7 +7,8 @@ void kill_test_task1(EventHandle event);
 void kill_test_task2(EventHandle event);
 
 void kill_test_task1(EventHandle event) {
-    TaskHandle task2 = create_task((void(*)(void*)) kill_test_task2, event, 0);
+    TaskHandle task2; 
+    create_task((void(*)(void*)) kill_test_task2, event, 0, &task2);
     event_wait(event);
 
     uint32_t counter;
@@ -17,7 +18,7 @@ void kill_test_task1(EventHandle event) {
     if (counter != 10) {
         event_post(test_completed_event, (void*) &test_result);
         kill(task2);
-        exit();
+        task_exit();
     }
 
     // Task2 is killed
@@ -30,7 +31,9 @@ void kill_test_task1(EventHandle event) {
 
     test_result = counter == 10;
     event_post(test_completed_event, (void*) &test_result);
-    exit();
+
+    delete_event(event);
+    task_exit();
 }
 
 void kill_test_task2(EventHandle event) {
@@ -50,5 +53,5 @@ void kill_test_task2(EventHandle event) {
 
 void test_kill() {
     EventHandle event = NEW_EVENT(uint32_t);
-    create_task((void(*)(void*)) kill_test_task1, event, 0);
+    create_task((void(*)(void*)) kill_test_task1, event, 0, NULL);
 }

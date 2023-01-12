@@ -106,7 +106,7 @@ void Reset_Handler()
     // The 'test completed' event is created
     test_completed_event = NEW_EVENT(bool);
 
-    create_task((void(*)(void*)) tests_runner, (void*)0, 0);
+    create_task((void(*)(void*)) tests_runner, (void*)0, 0, NULL);
     start_scheduler();
     while(1);
 }

@@ -21,7 +21,7 @@ void producer_task(SharedData* data) {
         data->consumed = false;
     }
     
-    exit();
+    task_exit();
 }
 
 void consumer_task(SharedData* data) {
@@ -34,19 +34,19 @@ void consumer_task(SharedData* data) {
 
         if (data->data != i) {
             event_post(test_completed_event, &test_result);
-            exit();
+            task_exit();
         }
         data->consumed = true;
     }
 
     // The data necessary for the test is deallocated
-    free((uint8_t*) data, sizeof(SharedData));
+    mem_free((uint8_t*) data, sizeof(SharedData));
 
     // Publish the test result
     test_result = 1;
     event_post(test_completed_event, &test_result);
     
-    exit();
+    task_exit();
 }
 
 void test_producer_consumer() {
@@ -55,6 +55,6 @@ void test_producer_consumer() {
     data->data = 0;
 
     // create the tasks
-    create_task((void(*)(void*)) producer_task, (void*)data, 0);
-    create_task((void(*)(void*)) consumer_task, (void*)data, 0);
+    create_task((void(*)(void*)) producer_task, (void*)data, 0, NULL);
+    create_task((void(*)(void*)) consumer_task, (void*)data, 0, NULL);
 }
