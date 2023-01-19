@@ -32,30 +32,33 @@ void writer_task3(PIPE pipe){
 void reader_task1(PIPE pipe){
     uint32_t test_result = 1;
     int msg;
-    while(messages > 0){
+    for(int i=0; i<3; i++){
         read_msg(pipe, msg);
-        if(msg == 0 | msg == 1 | msg == 2 | msg == 3 | msg == 4 ){
+        if(msg != 0 | msg != 1 | msg != 2 | msg != 3 | msg != 4 ){
             test_result = 0;
+            event_post(test_completed_event, &test_result); //message not valid
+        }else if(msg == 4){
+            event_post(test_completed_event, &test_result); //read last message
         }
-        messages--;
     }
-    //reads and control that the message read is valid
-    event_post(test_completed_event, &test_result);
+    
+    //reads 3 messages from the pipe and control that the messages are valid
     task_exit();
 }
 
 void reader_task2(PIPE pipe){
     uint32_t test_result = 1;
     int msg;
-    while(messages > 0){
+    while(int i=0; i<2; i++){
         read_msg(pipe, msg);
-        if(msg == 0 | msg == 1 | msg == 2 | msg == 3 | msg == 4 ){
+        if(msg != 0 | msg != 1 | msg != 2 | msg != 3 | msg != 4 ){
             test_result = 0;
+            event_post(test_completed_event, &test_result); //message not valid
+        }else if(msg == 4){
+            event_post(test_completed_event, &test_result); //read last message
         }
-        messages--;
     }
-    //reads and control that the message read is valid
-    event_post(test_completed_event, &test_result);
+    //reads 2 messages from the pipe and control that the messages are valid
     task_exit();
 }
 
