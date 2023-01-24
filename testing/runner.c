@@ -11,14 +11,14 @@ extern void test_producer_consumer();
 extern void test_events();
 extern void test_kill();
 extern void test_idle_task();
-extern void test_pipe();
+extern void test_channels();
 
 Test tests[] = {
     {"test_producer_consumer", test_producer_consumer},
     {"test_events", test_events},
     {"test_kill", test_kill},
     {"test_idle_task", test_idle_task},
-    {"test_pipe", test_pipe},
+    {"test_channels", test_channels},
 };
 
 void tests_runner() {
